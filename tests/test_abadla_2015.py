@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright (c) 2026 Chouaib Selkh
 """
 Regression test for the Abadla 2015 anchor case.
 
