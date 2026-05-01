@@ -44,6 +44,7 @@ from .core import (
 )
 from .tiers import Tier, classify, tier_table
 from .coefficients import (
+    ABADLA_MIXED_COMPOSITION,
     SEASON_COEFFICIENT,
     SUBSTRATE_COEFFICIENT,
     resolve_season_coefficient,
@@ -66,6 +67,7 @@ __all__ = [
     # coefficients
     "SEASON_COEFFICIENT",
     "SUBSTRATE_COEFFICIENT",
+    "ABADLA_MIXED_COMPOSITION",
     "resolve_season_coefficient",
     "resolve_substrate_coefficient",
     # version
