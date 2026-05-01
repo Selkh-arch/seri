@@ -1,0 +1,99 @@
+#
+# pyproject.toml — SERI (Spatial Effective Rainfall Index)
+#
+# Modern PEP 621 packaging. To build a wheel and an sdist locally:
+#     python -m pip install --upgrade build
+#     python -m build
+#
+# To upload to PyPI:
+#     python -m pip install --upgrade twine
+#     python -m twine upload dist/*
+#
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "seri"
+version = "1.0.0"
+description = "Spatial Effective Rainfall Index — an event-scale ecological-effectiveness metric for hyper-arid environments"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Chouaib Selkh", email = "chouaib342@univ-adrar.edu.dz" },
+]
+maintainers = [
+    { name = "Chouaib Selkh", email = "chouaib342@univ-adrar.edu.dz" },
+]
+keywords = [
+    "aridity",
+    "drought",
+    "drylands",
+    "hyper-arid",
+    "Sahara",
+    "remote sensing",
+    "MODIS",
+    "GPM IMERG",
+    "ecology",
+    "Earth Engine",
+    "SERI",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+    "Topic :: Scientific/Engineering :: GIS",
+    "Topic :: Scientific/Engineering :: Hydrology",
+]
+
+# The core package has *no* required runtime dependencies.
+# This is a deliberate choice: the formula is pure arithmetic and
+# should remain trivially installable in any constrained environment
+# (HPC clusters, Earth Engine sandboxes, restricted institutional
+# networks). All heavier dependencies (matplotlib, earthengine-api)
+# are optional extras.
+dependencies = []
+
+[project.optional-dependencies]
+plot         = ["matplotlib>=3.5"]
+earthengine  = ["earthengine-api>=0.1.300"]
+dev          = ["pytest>=7", "pytest-cov", "ruff"]
+all          = ["matplotlib>=3.5", "earthengine-api>=0.1.300"]
+
+[project.urls]
+Homepage      = "https://github.com/cselkh/seri"
+Repository    = "https://github.com/cselkh/seri"
+Documentation = "https://github.com/cselkh/seri#readme"
+Issues        = "https://github.com/cselkh/seri/issues"
+"Concept DOI" = "https://doi.org/10.5281/zenodo.PLACEHOLDER_SERI"
+
+# Console-script entry points. After `pip install seri`, the commands
+# `seri` and `seri-gui` are available on PATH (on Windows they become
+# `seri.exe` and `seri-gui.exe` in the Python Scripts directory, so they
+# can be launched by double-click or from a .bat file).
+[project.scripts]
+seri     = "seri.cli:main"
+seri-gui = "seri.gui:main"
+
+[tool.setuptools]
+packages = ["seri"]
+
+[tool.setuptools.package-data]
+seri = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"

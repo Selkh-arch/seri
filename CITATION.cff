@@ -1,0 +1,63 @@
+# This CITATION.cff file is read automatically by GitHub to populate the
+# "Cite this repository" button at the top of the repo page, and by Zenodo
+# when a release is published, to generate the BibTeX entry.
+#
+# Reference: https://citation-file-format.github.io/
+
+cff-version: 1.2.0
+title: "SERI — Spatial Effective Rainfall Index"
+message: "If you use this software, please cite both the software (this entry) and the concept paper (preferred-citation)."
+type: software
+authors:
+  - family-names: "Selkh"
+    given-names: "Chouaib"
+    orcid: "https://orcid.org/0000-0002-1538-7135"
+    affiliation: "Université Ahmed Draia d'Adrar, Faculté des Sciences de la Nature et de la Vie, Algeria"
+    email: "chouaib342@univ-adrar.edu.dz"
+abstract: >-
+  Reference Python implementation of the Spatial Effective Rainfall Index
+  (SERI), an event-scale ecological-effectiveness metric for hyper-arid
+  environments. SERI elevates the contiguous spatial extent of a
+  rainfall event to a first-class variable in the quantification of
+  its ecological efficacy: SERI = P · A^α · f(season) · g(substrate).
+  The index is operationally classified into six tiers, from
+  ecologically inert (SERI < 100) to regional recharge (SERI ≥ 15 000).
+keywords:
+  - aridity index
+  - SERI
+  - Spatial Effective Rainfall Index
+  - effective rainfall
+  - drylands
+  - hyper-arid
+  - Sahara
+  - drought monitoring
+  - remote sensing
+  - Google Earth Engine
+  - GPM IMERG
+  - MODIS NDVI
+  - pulse-reserve paradigm
+  - De Martonne centenary
+license: Apache-2.0
+version: "1.0.0"
+date-released: "2026-04-30"
+repository-code: "https://github.com/cselkh/seri"
+url: "https://github.com/cselkh/seri"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.PLACEHOLDER_SERI"
+    description: "Zenodo concept DOI for the SERI software."
+
+# The preferred-citation block tells citation tools to point users
+# to the underlying scientific article rather than the software when
+# the user wants the "main" reference for the work.
+preferred-citation:
+  type: article
+  title: "A Century After De Martonne: Why Spatial Coherence is the Missing Dimension of Aridity in the Hyper-Arid Sahara"
+  authors:
+    - family-names: "Selkh"
+      given-names: "Chouaib"
+      orcid: "https://orcid.org/0000-0002-1538-7135"
+      affiliation: "Université Ahmed Draia d'Adrar, Algeria"
+  year: 2026
+  journal: "Earth-Science Reviews"
+  notes: "in review"
