@@ -1,0 +1,27 @@
+{
+  "_comment": "Frozen reference values for the Abadla 2015 anchor case (manuscript v8.2, section 5.1). Any change to this file is a backward-incompatibility and requires a major version bump.",
+  "case": "abadla_2015",
+  "manuscript_section": "5.1",
+  "manuscript_version": "v8.2",
+  "inputs": {
+    "P_mm": 10.79,
+    "A_km2": 1624.0,
+    "season": 2,
+    "substrate": "mixed",
+    "alpha": 0.68
+  },
+  "expected": {
+    "value": 2352.64272150119,
+    "value_rounded": 2352,
+    "tier_name": "Perennial response",
+    "f": 1.30,
+    "g": 1.10,
+    "P": 10.79,
+    "A": 1624.0,
+    "alpha": 0.68
+  },
+  "tolerances": {
+    "value_rel_tol": 1e-4,
+    "coefficients_abs_tol": 1e-9
+  }
+}

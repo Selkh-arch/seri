@@ -61,6 +61,9 @@ Thumbs.db
 
 # Earth Engine credentials (never commit!)
 *.json
+
+# Whitelist: golden reference values for regression tests (no credentials, only frozen scientific reference values)
+!tests/golden/*.json
 .config/earthengine/
 
 # Local data files (private layer 2 of SERI - field photos, AOI shapefiles)
