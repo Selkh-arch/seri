@@ -2,6 +2,8 @@
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python ≥ 3.9](https://img.shields.io/badge/python-≥3.9-blue.svg)](https://www.python.org/)
+[![tests](https://github.com/Selkh-arch/seri/actions/workflows/tests.yml/badge.svg)](https://github.com/Selkh-arch/seri/actions/workflows/tests.yml)
+[![release](https://github.com/Selkh-arch/seri/actions/workflows/release.yml/badge.svg)](https://github.com/Selkh-arch/seri/actions/workflows/release.yml)
 [![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.PLACEHOLDER_SERI-blue)](https://doi.org/10.5281/zenodo.PLACEHOLDER_SERI)
 
 Reference Python implementation of the **Spatial Effective Rainfall Index (SERI)** —
