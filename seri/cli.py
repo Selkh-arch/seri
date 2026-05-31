@@ -1,5 +1,3 @@
-# SPDX-License-Identifier: Apache-2.0
-# Copyright (c) 2026 Chouaib Selkh
 """
 seri.cli
 ========
@@ -83,7 +81,7 @@ def _cmd_demo(args: argparse.Namespace) -> int:
         print("Abadla 2015 anchor case (inline fallback):")
         print(f"  SERI = {result.value:.1f}  ->  {result.tier_name}")
         print()
-        print("Tip: clone the repository (https://github.com/cselkh/seri)")
+        print("Tip: clone the repository (https://github.com/Selkh-arch/seri)")
         print("for the full multi-section demo script.")
         return 0
     runpy.run_path(str(demo_path), run_name="__main__")
@@ -121,13 +119,13 @@ def _cmd_gui(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 def _cmd_info(args: argparse.Namespace) -> int:
     """Print package and citation info."""
-    print(f"SERI - Spatial Effective Rainfall Index")
+    print("SERI - Spatial Effective Rainfall Index")
     print(f"Version:  {__version__}")
-    print(f"License:  Apache 2.0")
+    print("License:  Apache 2.0")
     print()
     print("Cite this software:")
     print("  Selkh, C. (2026). SERI - Spatial Effective Rainfall Index")
-    print("  [Computer software]. Zenodo. doi:10.5281/zenodo.PLACEHOLDER_SERI")
+    print("  [Computer software]. Zenodo. doi:10.5281/zenodo.20000268")
     print()
     print("Cite the concept paper:")
     print("  Selkh, C. (2026). A Century After De Martonne: Why Spatial")

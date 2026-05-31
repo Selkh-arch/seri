@@ -38,13 +38,13 @@ keywords:
   - pulse-reserve paradigm
   - De Martonne centenary
 license: Apache-2.0
-version: "1.0.0"
-date-released: "2026-04-30"
-repository-code: "https://github.com/cselkh/seri"
-url: "https://github.com/cselkh/seri"
+version: "1.0.1"
+date-released: "2026-05-31"
+repository-code: "https://github.com/Selkh-arch/seri"
+url: "https://github.com/Selkh-arch/seri"
 identifiers:
   - type: doi
-    value: "10.5281/zenodo.PLACEHOLDER_SERI"
+    value: "10.5281/zenodo.20000268"
     description: "Zenodo concept DOI for the SERI software."
 
 # The preferred-citation block tells citation tools to point users

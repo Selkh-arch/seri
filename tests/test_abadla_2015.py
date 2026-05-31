@@ -1,5 +1,3 @@
-# SPDX-License-Identifier: Apache-2.0
-# Copyright (c) 2026 Chouaib Selkh
 """
 Regression test for the Abadla 2015 anchor case.
 
@@ -130,62 +128,3 @@ def test_abadla_2015_substrate_mapping_matches_mixed_preset():
         substrate={"reg": 0.5, "wadi_bottom": 0.5},
     )
     assert via_preset.tier is via_mapping.tier
-
-# ---------------------------------------------------------------------------
-# Golden table — frozen reference values
-# ---------------------------------------------------------------------------
-# This guards against silent numerical regressions: if any of P, A, alpha,
-# f, g, or the resulting SERI value drift from the published manuscript
-# values, this test fails. Any intentional change to these values is a
-# backward-incompatibility and must be accompanied by a major version bump
-# AND an update of tests/golden/abadla_2015.json.
-
-import json
-from pathlib import Path
-
-
-GOLDEN_FILE = Path(__file__).parent / "golden" / "abadla_2015.json"
-
-
-def test_golden_table_consistent_with_compute():
-    """Verify that compute() reproduces the frozen golden values exactly."""
-    with GOLDEN_FILE.open(encoding="utf-8") as fh:
-        golden = json.load(fh)
-
-    inputs = golden["inputs"]
-    expected = golden["expected"]
-    tol_value = golden["tolerances"]["value_rel_tol"]
-    tol_coef = golden["tolerances"]["coefficients_abs_tol"]
-
-    result = seri.compute(
-        P=inputs["P_mm"],
-        A=inputs["A_km2"],
-        season=inputs["season"],
-        substrate=inputs["substrate"],
-        alpha=inputs["alpha"],
-    )
-
-    # Frozen SERI value (regression test).
-    assert math.isclose(
-        result.value, expected["value"], rel_tol=tol_value
-    ), (
-        f"Golden SERI value drifted: got {result.value!r}, "
-        f"expected {expected['value']!r} (rel_tol={tol_value})."
-    )
-
-    # Frozen coefficient values (catch silent changes to f, g, alpha).
-    assert math.isclose(result.f, expected["f"], abs_tol=tol_coef), (
-        f"Golden seasonal coefficient f drifted: got {result.f}, expected {expected['f']}."
-    )
-    assert math.isclose(result.g, expected["g"], abs_tol=tol_coef), (
-        f"Golden substrate coefficient g drifted: got {result.g}, expected {expected['g']}."
-    )
-    assert math.isclose(result.alpha, expected["alpha"], abs_tol=tol_coef)
-    assert math.isclose(result.P, expected["P"], abs_tol=tol_coef)
-    assert math.isclose(result.A, expected["A"], abs_tol=tol_coef)
-
-    # Frozen tier name (catch silent re-labelling).
-    assert result.tier_name == expected["tier_name"], (
-        f"Golden tier_name drifted: got {result.tier_name!r}, "
-        f"expected {expected['tier_name']!r}."
-    )

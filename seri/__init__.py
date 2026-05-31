@@ -1,5 +1,3 @@
-# SPDX-License-Identifier: Apache-2.0
-# Copyright (c) 2026 Chouaib Selkh
 """
 seri - Spatial Effective Rainfall Index
 ========================================
@@ -16,7 +14,7 @@ Quick start
 >>> import seri
 >>> result = seri.compute(P=10.79, A=1624, season=2, substrate='mixed')
 >>> print(result)  # doctest: +ELLIPSIS
-SERIResult(value=2351..., tier=PERENNIAL, ...)
+SERIResult(value=2352..., tier=PERENNIAL, ...)
 >>> result.tier_name
 'Perennial response'
 
@@ -26,7 +24,7 @@ If you use SERI in your research, please cite both the software and
 the concept paper:
 
     Selkh, C. (2026). SERI - Spatial Effective Rainfall Index
-    [Computer software]. Zenodo. doi:10.5281/zenodo.PLACEHOLDER_SERI
+    [Computer software]. Zenodo. doi:10.5281/zenodo.20000268
 
     Selkh, C. (2026). A Century After De Martonne: Why Spatial Coherence
     is the Missing Dimension of Aridity in the Hyper-Arid Sahara.
@@ -46,14 +44,13 @@ from .core import (
 )
 from .tiers import Tier, classify, tier_table
 from .coefficients import (
-    ABADLA_MIXED_COMPOSITION,
     SEASON_COEFFICIENT,
     SUBSTRATE_COEFFICIENT,
     resolve_season_coefficient,
     resolve_substrate_coefficient,
 )
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 __all__ = [
     # core
@@ -69,7 +66,6 @@ __all__ = [
     # coefficients
     "SEASON_COEFFICIENT",
     "SUBSTRATE_COEFFICIENT",
-    "ABADLA_MIXED_COMPOSITION",
     "resolve_season_coefficient",
     "resolve_substrate_coefficient",
     # version

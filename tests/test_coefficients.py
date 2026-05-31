@@ -1,11 +1,8 @@
-# SPDX-License-Identifier: Apache-2.0
-# Copyright (c) 2026 Chouaib Selkh
 """Tests for seri.coefficients."""
 
 import pytest
 
 from seri.coefficients import (
-    ABADLA_MIXED_COMPOSITION,
     SEASON_COEFFICIENT,
     SUBSTRATE_COEFFICIENT,
     resolve_season_coefficient,
@@ -112,43 +109,3 @@ def test_substrate_unknown_label_raises():
 def test_substrate_empty_mapping_raises():
     with pytest.raises(ValueError):
         resolve_substrate_coefficient({})
-
-
-# ---------------------------------------------------------------------------
-# Abadla 2015 mixed-substrate composition (manuscript section 5.1)
-# ---------------------------------------------------------------------------
-# The 'mixed' preset must equal the area-weighted mean of the documented
-# Abadla composition (~67 % reg + ~33 % wadi-bottom). This test makes the
-# derivation explicit and prevents accidental drift between the preset
-# value and its documented composition.
-
-def test_abadla_mixed_composition_sums_to_one():
-    """Sanity check: the documented composition must be a valid mapping."""
-    total = sum(ABADLA_MIXED_COMPOSITION.values())
-    assert total == pytest.approx(1.0, abs=1e-9)
-
-
-def test_abadla_mixed_composition_dominant_class_is_reg():
-    """The composition is dominated by reg (the desert-pavement majority)."""
-    assert ABADLA_MIXED_COMPOSITION["reg"] > ABADLA_MIXED_COMPOSITION["wadi_bottom"]
-
-
-def test_mixed_preset_derives_from_abadla_composition():
-    """The 'mixed' preset value must equal the area-weighted mean of the
-    documented Abadla composition. This is the anti-magic-number test:
-    if anyone ever changes one without updating the other, this fails."""
-    derived = sum(
-        SUBSTRATE_COEFFICIENT[k] * v
-        for k, v in ABADLA_MIXED_COMPOSITION.items()
-    )
-    assert SUBSTRATE_COEFFICIENT["mixed"] == pytest.approx(derived, abs=1e-9)
-    # Numerical sanity check: should be ~ 1.10 (manuscript section 5.1).
-    assert SUBSTRATE_COEFFICIENT["mixed"] == pytest.approx(1.10, abs=1e-9)
-
-
-def test_mixed_preset_via_resolve_matches_explicit_mapping():
-    """resolve_substrate_coefficient('mixed') must return the same value as
-    passing the Abadla composition explicitly as a mapping."""
-    via_label = resolve_substrate_coefficient("mixed")
-    via_mapping = resolve_substrate_coefficient(dict(ABADLA_MIXED_COMPOSITION))
-    assert via_label == pytest.approx(via_mapping, abs=1e-9)

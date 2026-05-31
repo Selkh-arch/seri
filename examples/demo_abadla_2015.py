@@ -1,5 +1,3 @@
-# SPDX-License-Identifier: Apache-2.0
-# Copyright (c) 2026 Chouaib Selkh
 """
 SERI v1.0 — quick demo
 ======================
@@ -41,7 +39,7 @@ result = seri.compute(
     substrate="mixed",  # area-weighted reg + wadi-bottom mix
 )
 
-print(f"Inputs:        P = 10.79 mm, A = 1624 km²")
+print("Inputs:        P = 10.79 mm, A = 1624 km²")
 print(f"Coefficients:  α = {result.alpha}, f = {result.f}, g = {result.g}")
 print(f"SERI value:    {result.value:.1f}   (manuscript §5.1: ~2353)")
 print(f"Tier:          {result.tier.name} — {result.tier_name}")
@@ -59,9 +57,9 @@ print("but very different spatial coherence:\n")
 event_a = seri.compute(P=18.0, A=51,   season=7, substrate="reg")
 event_b = seri.compute(P=17.0, A=1281, season=2, substrate="mixed")
 
-print(f"  Event A (summer convective cell, 51 km²):")
+print("  Event A (summer convective cell, 51 km²):")
 print(f"      SERI = {event_a.value:>6.0f}   →   {event_a.tier_name}")
-print(f"  Event B (winter frontal system, 1281 km²):")
+print("  Event B (winter frontal system, 1281 km²):")
 print(f"      SERI = {event_b.value:>6.0f}   →   {event_b.tier_name}")
 print()
 print("→ identical scalar P, but SERI separates them by several tiers,")
@@ -142,5 +140,5 @@ print("End of demo.")
 print()
 print("Cite this software:")
 print("  Selkh, C. (2026). SERI — Spatial Effective Rainfall Index")
-print("  [Computer software]. Zenodo. doi:10.5281/zenodo.PLACEHOLDER_SERI")
+print("  [Computer software]. Zenodo. doi:10.5281/zenodo.20000268")
 print("=" * 72)

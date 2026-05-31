@@ -1,5 +1,3 @@
-# SPDX-License-Identifier: Apache-2.0
-# Copyright (c) 2026 Chouaib Selkh
 """
 seri.coefficients
 =================
@@ -101,41 +99,11 @@ SUBSTRATE_COEFFICIENT = {
     "erg":         1.25,  # sandy dunes, high infiltration
     "wadi_bottom": 1.60,  # alluvial fines concentrating runoff
     "sebkha":      0.30,  # saline-evaporative depression
+    # 'mixed' is a convenience preset that reflects the area-weighted
+    # mean of reg + wadi-bottom alluvium used for the Abadla 2015
+    # anchor case (manuscript section 5.1).
+    "mixed":       1.10,
 }
-
-# ---------------------------------------------------------------------------
-# Abadla 2015 mixed-substrate composition
-# ---------------------------------------------------------------------------
-# The Abadla 2015 anchor case (manuscript section 5.1) used an area-weighted
-# mean substrate coefficient g = 1.10 over the IMERG footprint, dominated by
-# desert pavement (reg) with a substantial alluvial-fines (wadi-bottom)
-# component along the lower Saoura wadi axis. Solving algebraically:
-#
-#     1.10 = 0.85 * x + 1.60 * (1 - x)   =>   x = 2/3
-#
-# the implied composition is approximately 67 % reg + 33 % wadi-bottom,
-# consistent with the proportions visible in the field photography of Fig. 1
-# (alluvial wadi axes interspersed with reg surfaces).
-#
-# Exposing this composition explicitly (rather than hard-coding g = 1.10
-# as an opaque "magic number") makes the derivation auditable: anyone can
-# verify that g falls out of the documented composition, and the convenience
-# label 'mixed' is no longer a bare scalar but a derived quantity.
-
-ABADLA_MIXED_COMPOSITION: Mapping[str, float] = {
-    "reg":         2.0 / 3.0,
-    "wadi_bottom": 1.0 / 3.0,
-}
-
-# Convenience alias: the 'mixed' label is shorthand for the Abadla
-# composition above. Numerically equal to 1.10 (manuscript section 5.1).
-# New code is encouraged to pass an explicit area-weighted mapping for
-# traceability, but the alias is retained for backward compatibility with
-# v1.0.0 examples and tests.
-SUBSTRATE_COEFFICIENT["mixed"] = (
-    SUBSTRATE_COEFFICIENT["reg"] * ABADLA_MIXED_COMPOSITION["reg"]
-    + SUBSTRATE_COEFFICIENT["wadi_bottom"] * ABADLA_MIXED_COMPOSITION["wadi_bottom"]
-)
 
 # Aliases tolerated for the wadi-bottom class (avoid hyphen / dash issues
 # when users pass the label by hand).

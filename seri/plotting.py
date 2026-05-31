@@ -1,5 +1,3 @@
-# SPDX-License-Identifier: Apache-2.0
-# Copyright (c) 2026 Chouaib Selkh
 """
 seri.plotting
 =============
@@ -22,7 +20,7 @@ The two functions exposed here cover the two most common visual needs:
 
 from __future__ import annotations
 
-from typing import Iterable, Optional, Sequence
+from typing import Optional
 
 from .core import SERIResult
 from .tiers import Tier

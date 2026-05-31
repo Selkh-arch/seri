@@ -1,5 +1,3 @@
-# SPDX-License-Identifier: Apache-2.0
-# Copyright (c) 2026 Chouaib Selkh
 """
 seri.core
 =========
@@ -29,7 +27,7 @@ Earth-Science Reviews, in review.
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Mapping, Union
 
 from .coefficients import resolve_season_coefficient, resolve_substrate_coefficient

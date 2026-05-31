@@ -1,5 +1,3 @@
-# SPDX-License-Identifier: Apache-2.0
-# Copyright (c) 2026 Chouaib Selkh
 """
 seri.gui
 ========
@@ -24,7 +22,6 @@ Launch with:
 from __future__ import annotations
 
 import sys
-from typing import Optional
 
 from . import __version__
 from .core import DEFAULT_ALPHA, compute
@@ -267,7 +264,7 @@ def main() -> int:
     status = ttk.Label(
         root,
         text=("Cite: Selkh, C. (2026). SERI - Spatial Effective Rainfall Index. "
-              "Zenodo. doi:10.5281/zenodo.PLACEHOLDER_SERI"),
+              "Zenodo. doi:10.5281/zenodo.20000268"),
         foreground="#666", padding=(12, 4),
     )
     status.pack(fill="x", side="bottom")

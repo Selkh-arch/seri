@@ -16,7 +16,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "seri"
-version = "1.0.0"
+version = "1.0.1"
 description = "Spatial Effective Rainfall Index — an event-scale ecological-effectiveness metric for hyper-arid environments"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -70,11 +70,11 @@ dev          = ["pytest>=7", "pytest-cov", "ruff"]
 all          = ["matplotlib>=3.5", "earthengine-api>=0.1.300"]
 
 [project.urls]
-Homepage      = "https://github.com/cselkh/seri"
-Repository    = "https://github.com/cselkh/seri"
-Documentation = "https://github.com/cselkh/seri#readme"
-Issues        = "https://github.com/cselkh/seri/issues"
-"Concept DOI" = "https://doi.org/10.5281/zenodo.PLACEHOLDER_SERI"
+Homepage      = "https://github.com/Selkh-arch/seri"
+Repository    = "https://github.com/Selkh-arch/seri"
+Documentation = "https://github.com/Selkh-arch/seri#readme"
+Issues        = "https://github.com/Selkh-arch/seri/issues"
+"Concept DOI" = "https://doi.org/10.5281/zenodo.20000268"
 
 # Console-script entry points. After `pip install seri`, the commands
 # `seri` and `seri-gui` are available on PATH (on Windows they become

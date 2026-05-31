@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] — 2026-05-31
+
+Maintenance release: packaging, metadata, and continuous-integration fixes.
+No change to the scientific formula, default coefficients, tier boundaries,
+or any computed result; the 73 unit tests are unchanged and all pass.
+
+### Fixed
+- Software DOI corrected throughout the package to the SERI code deposit
+  (10.5281/zenodo.20000268); earlier files referenced the SaharaFlora Pro
+  deposit (…19535545) by mistake.
+- Repository URLs corrected to https://github.com/Selkh-arch/seri.
+- Removed unused imports and placeholder f-strings flagged by ruff; the
+  package now passes `ruff check` cleanly.
+
+### Added
+- Continuous integration: `.github/workflows/tests.yml` (ruff lint + pytest
+  on Python 3.9–3.12).
+- Release automation: `.github/workflows/release-to-pypi.yml` using PyPI
+  Trusted Publishing (OIDC). See the README for the one-time PyPI setup.
+
 ## [1.0.0] — 2026-04-30
 
 First public release accompanying the SERI concept paper
@@ -60,4 +80,5 @@ First public release accompanying the SERI concept paper
   transfer to other hyper-arid systems requires regional re-calibration
   (manuscript § 6.2).
 
-[1.0.0]: https://github.com/cselkh/seri/releases/tag/v1.0.0
+[1.0.1]: https://github.com/Selkh-arch/seri/releases/tag/v1.0.1
+[1.0.0]: https://github.com/Selkh-arch/seri/releases/tag/v1.0.0
