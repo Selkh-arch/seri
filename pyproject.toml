@@ -15,7 +15,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "seri"
+name = "seri-index"
 version = "1.0.1"
 description = "Spatial Effective Rainfall Index — an event-scale ecological-effectiveness metric for hyper-arid environments"
 readme = "README.md"
