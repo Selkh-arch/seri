@@ -16,7 +16,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "seri-index"
-version = "1.0.1"
+version = "1.0.2"
 description = "Spatial Effective Rainfall Index — an event-scale ecological-effectiveness metric for hyper-arid environments"
 readme = "README.md"
 requires-python = ">=3.9"
