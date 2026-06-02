@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SERI Calculator — Spatial Effective Rainfall Index</title>
+<meta name="description" content="Open calculator for the Spatial Effective Rainfall Index (SERI), a per-event measure of the ecological effectiveness of rainfall in hyper-arid drylands (Selkh 2026).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,500&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4efe4;
+    --paper-2:#efe8d9;
+    --ink:#211a10;
+    --ink-soft:#5a4f3d;
+    --line:#d8cdb6;
+    --line-strong:#c4b698;
+    --terra:#b4541f;
+    --terra-deep:#8f3f15;
+    --gold:#c79a3a;
+    /* tier palette: arid -> vegetated -> water */
+    --t0:#cdbf9f;
+    --t1:#c79a3a;
+    --t2:#9fb24a;
+    --t3:#4f8f47;
+    --t4:#2f8f86;
+    --t5:#2a5f9e;
+    --shadow:0 1px 0 rgba(255,255,255,.5), 0 18px 40px -24px rgba(40,28,12,.55);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(120% 90% at 85% -10%, rgba(199,154,58,.10), transparent 55%),
+      radial-gradient(120% 100% at -10% 10%, rgba(180,84,31,.07), transparent 50%),
+      var(--paper);
+    color:var(--ink);
+    font-family:"Spectral",Georgia,serif;
+    font-size:17px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* subtle paper grain */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  }
+  .wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:34px 20px 70px;}
+
+  /* ---------- masthead ---------- */
+  header.mast{border-bottom:2px solid var(--ink);padding-bottom:22px;margin-bottom:30px;}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--terra-deep);margin:0 0 10px;}
+  h1{
+    font-family:"Fraunces",serif;font-weight:600;font-size:clamp(40px,9vw,76px);
+    line-height:.92;margin:0;letter-spacing:-.02em;
+  }
+  h1 .word{font-style:italic;font-weight:500;color:var(--terra);}
+  .sub{font-family:"Fraunces",serif;font-size:clamp(15px,2.6vw,20px);color:var(--ink-soft);margin:12px 0 0;max-width:60ch;font-weight:400;}
+  .formula-band{
+    margin-top:20px;padding:14px 18px;background:var(--paper-2);border:1px solid var(--line);
+    border-radius:10px;font-family:"JetBrains Mono",monospace;font-size:clamp(14px,3.3vw,19px);
+    color:var(--ink);display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 4px;overflow-x:auto;
+  }
+  .formula-band b{color:var(--terra-deep);font-weight:700;}
+  .formula-band sup{font-size:.62em;}
+
+  /* ---------- grid ---------- */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
+  @media (max-width:760px){.grid{grid-template-columns:1fr;gap:20px;}}
+
+  .card{
+    background:linear-gradient(180deg,#fbf7ee, #f4efe2);
+    border:1px solid var(--line-strong);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:22px 22px 24px;
+  }
+  .card h2{
+    font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--terra-deep);margin:0 0 18px;font-weight:700;display:flex;align-items:center;gap:10px;
+  }
+  .card h2::after{content:"";flex:1;height:1px;background:var(--line);}
+
+  label.fld{display:block;margin-bottom:16px;}
+  label.fld .lab{display:flex;justify-content:space-between;align-items:baseline;font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.04em;color:var(--ink-soft);margin-bottom:6px;}
+  label.fld .lab .sym{color:var(--terra);font-weight:700;font-size:13px;}
+  label.fld .unit{font-size:11px;color:var(--ink-soft);opacity:.8;}
+  input[type=number],select{
+    width:100%;font-family:"JetBrains Mono",monospace;font-size:18px;color:var(--ink);
+    background:#fffdf8;border:1px solid var(--line-strong);border-radius:9px;padding:11px 12px;
+    -moz-appearance:textfield;transition:border-color .15s, box-shadow .15s;
+  }
+  input[type=number]:focus,select:focus{outline:none;border-color:var(--terra);box-shadow:0 0 0 3px rgba(180,84,31,.14);}
+  select{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238f3f15' stroke-width='1.6' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:34px;}
+
+  /* advanced */
+  .adv-toggle{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--terra-deep);background:none;border:none;cursor:pointer;padding:4px 0;display:flex;align-items:center;gap:8px;letter-spacing:.05em;}
+  .adv-toggle .chev{transition:transform .2s;}
+  .adv-toggle.open .chev{transform:rotate(90deg);}
+  .adv{margin-top:8px;border-top:1px dashed var(--line-strong);padding-top:14px;display:none;}
+  .adv.open{display:block;}
+  .slider-row{display:flex;align-items:center;gap:12px;}
+  input[type=range]{flex:1;accent-color:var(--terra);}
+  .alpha-read{font-family:"JetBrains Mono",monospace;font-weight:700;color:var(--terra-deep);min-width:54px;text-align:right;font-size:17px;}
+  .adv .hint{font-size:12.5px;color:var(--ink-soft);margin:10px 0 0;line-height:1.45;}
+
+  /* ---------- result ---------- */
+  .result-card{display:flex;flex-direction:column;}
+  .seri-out{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:clamp(54px,15vw,92px);line-height:1;letter-spacing:-.02em;color:var(--ink);}
+  .seri-out .dim{color:var(--line-strong);}
+  .tier-name{font-family:"Fraunces",serif;font-style:italic;font-size:clamp(22px,5vw,30px);margin:6px 0 2px;}
+  .tier-desc{font-size:14.5px;color:var(--ink-soft);margin:0 0 18px;min-height:2.6em;}
+
+  .scale{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:4px;}
+  .seg{height:38px;border-radius:6px;position:relative;opacity:.34;transition:opacity .2s, transform .2s;display:flex;align-items:flex-end;justify-content:center;}
+  .seg.on{opacity:1;transform:translateY(-3px);box-shadow:0 8px 18px -10px rgba(40,28,12,.6);}
+  .seg span{font-family:"JetBrains Mono",monospace;font-size:9px;color:rgba(255,255,255,.92);padding-bottom:3px;font-weight:500;text-shadow:0 1px 2px rgba(0,0,0,.35);}
+  .seg0{background:var(--t0);} .seg1{background:var(--t1);} .seg2{background:var(--t2);}
+  .seg3{background:var(--t3);} .seg4{background:var(--t4);} .seg5{background:var(--t5);}
+  .scale-labels{display:flex;justify-content:space-between;font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--ink-soft);margin-top:7px;}
+
+  .calc-line{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--ink-soft);margin-top:18px;padding-top:14px;border-top:1px solid var(--line);word-break:break-word;line-height:1.7;}
+  .calc-line b{color:var(--terra-deep);}
+
+  /* ---------- validation strip ---------- */
+  .valid{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:24px;padding:16px 18px;border:1px solid var(--line-strong);border-radius:12px;background:var(--paper-2);}
+  .valid p{margin:0;font-size:14px;color:var(--ink-soft);flex:1;min-width:220px;}
+  .valid b{color:var(--ink);}
+  .btn{font-family:"JetBrains Mono",monospace;font-size:12px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;border-radius:8px;padding:10px 16px;border:1px solid var(--terra);background:var(--terra);color:#fff;transition:background .15s,transform .05s;}
+  .btn:hover{background:var(--terra-deep);}
+  .btn:active{transform:translateY(1px);}
+  .btn.ghost{background:transparent;color:var(--terra-deep);}
+  .btn.ghost:hover{background:rgba(180,84,31,.08);}
+  .checkmark{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:13px;color:var(--t3);display:none;}
+  .checkmark.show{display:inline;}
+
+  /* ---------- citation ---------- */
+  .cite{margin-top:26px;}
+  .cite .card{padding-bottom:20px;}
+  .cite-block{background:#fffdf8;border:1px solid var(--line);border-radius:9px;padding:12px 14px;font-family:"JetBrains Mono",monospace;font-size:12px;line-height:1.6;color:var(--ink);white-space:pre-wrap;word-break:break-word;position:relative;margin-bottom:8px;}
+  .cite-row{margin-bottom:18px;}
+  .cite-row .crow-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;gap:10px;}
+  .cite-row .crow-head h3{font-family:"Fraunces",serif;font-weight:600;font-size:16px;margin:0;}
+  .copy{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line-strong);background:var(--paper-2);color:var(--terra-deep);border-radius:6px;padding:5px 11px;cursor:pointer;white-space:nowrap;transition:background .15s;}
+  .copy:hover{background:#fff;}
+  .copy.done{background:var(--t3);color:#fff;border-color:var(--t3);}
+  .doi a{color:var(--terra-deep);text-decoration:none;border-bottom:1px solid var(--line-strong);}
+  .doi a:hover{border-color:var(--terra);}
+
+  /* ---------- footer ---------- */
+  footer{margin-top:34px;padding-top:20px;border-top:1px solid var(--line);font-size:13px;color:var(--ink-soft);line-height:1.6;}
+  footer .note{background:var(--paper-2);border-left:3px solid var(--gold);padding:12px 15px;border-radius:0 8px 8px 0;margin-bottom:16px;}
+  footer a{color:var(--terra-deep);}
+  .links{display:flex;flex-wrap:wrap;gap:8px 22px;font-family:"JetBrains Mono",monospace;font-size:12px;}
+  .ver{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--line-strong);margin-top:14px;letter-spacing:.05em;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="mast">
+    <p class="eyebrow"><a href="../" style="color:var(--terra-deep);text-decoration:none;">← SERI</a> · open dryland-ecology instrument · v1</p>
+    <h1>SERI <span class="word">Calculator</span></h1>
+    <p class="sub">The <strong>Spatial Effective Rainfall Index</strong> — a per-event measure of how ecologically effective a rainfall event is in hyper-arid drylands. It scores not the scalar intensity of a storm but its <em>spatial coherence</em>.</p>
+    <div class="formula-band" aria-label="SERI formula">
+      SERI&nbsp;=&nbsp;<b>P</b>&nbsp;·&nbsp;<b>A</b><sup>α</sup>&nbsp;·&nbsp;<b>f</b>(season)&nbsp;·&nbsp;<b>g</b>(substrate)
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- INPUTS -->
+    <section class="card">
+      <h2>Inputs</h2>
+
+      <label class="fld">
+        <span class="lab"><span><span class="sym">P</span> · event mean intensity</span><span class="unit">mm</span></span>
+        <input type="number" id="P" value="10.79" min="0" step="0.01" inputmode="decimal">
+      </label>
+
+      <label class="fld">
+        <span class="lab"><span><span class="sym">A</span> · contiguous area &gt; 5&nbsp;mm·day⁻¹</span><span class="unit">km²</span></span>
+        <input type="number" id="A" value="1624" min="1" step="1" inputmode="decimal">
+      </label>
+
+      <label class="fld">
+        <span class="lab"><span><span class="sym">f</span> · season</span><span class="unit">PET cycle</span></span>
+        <select id="season">
+          <option value="1.30" selected>Oct–Mar · cool season (1.30)</option>
+          <option value="0.65">Apr–May &amp; Sep · shoulder (0.65)</option>
+          <option value="0.35">Jun–Aug · hot season (0.35)</option>
+        </select>
+      </label>
+
+      <label class="fld">
+        <span class="lab"><span><span class="sym">g</span> · substrate</span><span class="unit">infiltration</span></span>
+        <select id="substrate">
+          <option value="1.10" selected>Mixed / area-weighted mean — set value →</option>
+          <option value="0.30">Sebkha · saline depression (0.30)</option>
+          <option value="0.55">Hamada · crusted plateau (0.55)</option>
+          <option value="0.85">Reg · desert pavement (0.85)</option>
+          <option value="1.25">Erg · sandy dune fields (1.25)</option>
+          <option value="1.60">Wadi-bottom · alluvial fines (1.60)</option>
+        </select>
+      </label>
+
+      <label class="fld" id="gCustomWrap">
+        <span class="lab"><span>↳ mixed-footprint <span class="sym">g</span> value</span><span class="unit">0.30 – 1.60</span></span>
+        <input type="number" id="gCustom" value="1.10" min="0" max="3" step="0.01" inputmode="decimal">
+      </label>
+
+      <button class="adv-toggle" id="advBtn" type="button"><span class="chev">▸</span> Spatial exponent α (advanced)</button>
+      <div class="adv" id="advPanel">
+        <div class="slider-row">
+          <input type="range" id="alpha" min="0.50" max="1.00" step="0.01" value="0.68">
+          <span class="alpha-read" id="alphaRead">0.68</span>
+        </div>
+        <p class="hint">α = <b>0.68</b> is the working value of the concept paper (calibration of α across ≈150 events is reported in the companion paper, Selkh, in&nbsp;prep.). For the Abadla inputs, the perennial-response tier corresponds to α ∈ [0.66, 0.78].</p>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section class="card result-card">
+      <h2>Result</h2>
+      <div class="seri-out" id="seriOut">2353</div>
+      <div class="tier-name" id="tierName">Perennial response</div>
+      <p class="tier-desc" id="tierDesc">Leaf-flush of established perennials; sustained NDVI anomaly 30–90 days.</p>
+
+      <div class="scale" id="scale">
+        <div class="seg seg0"><span>&lt;100</span></div>
+        <div class="seg seg1"><span>500</span></div>
+        <div class="seg seg2"><span>2k</span></div>
+        <div class="seg seg3 on"><span>5k</span></div>
+        <div class="seg seg4"><span>15k</span></div>
+        <div class="seg seg5"><span>15k+</span></div>
+      </div>
+      <div class="scale-labels"><span>inert</span><span>annual</span><span>perennial</span><span>wadi</span><span>recharge</span></div>
+
+      <div class="calc-line" id="calcLine"></div>
+    </section>
+  </div>
+
+  <!-- VALIDATION -->
+  <div class="valid">
+    <p>Built-in self-check — the <b>Abadla 2015</b> anchor event (P = 10.79 mm, A = 1624 km², cool season, mixed g = 1.10, α = 0.68) should reproduce the paper's <b>SERI ≈ 2353</b>.</p>
+    <span class="checkmark" id="check">✓ reproduces 2353</span>
+    <button class="btn ghost" id="loadAbadla" type="button">Load Abadla 2015</button>
+  </div>
+
+  <!-- CITATION -->
+  <div class="cite">
+    <div class="card">
+      <h2>How to cite</h2>
+
+      <div class="cite-row">
+        <div class="crow-head"><h3>Result snippet</h3><button class="copy" data-target="snip">Copy</button></div>
+        <div class="cite-block" id="snip"></div>
+      </div>
+
+      <div class="cite-row">
+        <div class="crow-head"><h3>Methods sentence</h3><button class="copy" data-target="methods">Copy</button></div>
+        <div class="cite-block" id="methods">The Spatial Effective Rainfall Index (SERI; Selkh, 2026, doi:10.5281/zenodo.19925434) was computed as SERI = P · A^α · f(season) · g(substrate) with α = 0.68, using the open seri-index package (v1.0.2; doi:10.5281/zenodo.20000268).</div>
+      </div>
+
+      <div class="cite-row">
+        <div class="crow-head"><h3>BibTeX</h3><button class="copy" data-target="bibtex">Copy</button></div>
+        <div class="cite-block" id="bibtex">@misc{Selkh2026SERI,
+  author = {Selkh, Chouaib},
+  title  = {A Century After De Martonne: Introducing the Spatial
+            Effective Rainfall Index (SERI) for Hyper-Arid Environments},
+  year   = {2026},
+  doi    = {10.5281/zenodo.19925434}
+}
+@software{Selkh2026SERIcode,
+  author  = {Selkh, Chouaib},
+  title   = {SERI: Spatial Effective Rainfall Index},
+  version = {1.0.2},
+  year    = {2026},
+  doi     = {10.5281/zenodo.20000268},
+  url     = {https://pypi.org/project/seri-index/}
+}</div>
+      </div>
+
+      <p class="doi" style="font-size:13.5px;color:var(--ink-soft);margin:4px 0 0;">
+        Paper: <a href="https://doi.org/10.5281/zenodo.19925434">doi.org/10.5281/zenodo.19925434</a> ·
+        Software: <a href="https://doi.org/10.5281/zenodo.20000268">doi.org/10.5281/zenodo.20000268</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="note">
+      <strong>Regional calibration.</strong> The seasonal (f) and substrate (g) coefficients and the six tier thresholds are calibrated for the <strong>northern Algerian Sahara</strong> transect (2013–2024). The <em>framework</em> transfers worldwide, but the numerical values require regional recalibration against locally observed ecological response — the pipeline is released as open code precisely so this reduces to substituting a regional event archive (paper §6.2). This calculator evaluates the index from values you provide; it does not retrieve satellite data.
+    </div>
+    <div class="links">
+      <span>📦 <a href="https://pypi.org/project/seri-index/">pip install seri-index</a></span>
+      <span>💻 <a href="https://github.com/Selkh-arch/seri">github.com/Selkh-arch/seri</a></span>
+      <span>📄 <a href="https://doi.org/10.5281/zenodo.19925434">Concept paper</a></span>
+    </div>
+    <p class="ver">SERI Calculator · faithful to manuscript v8.12 · © C. Selkh 2026 · Apache-2.0</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- Tier definitions: faithful to Table 1 (manuscript v8.12) ----
+  // ascending lower bounds; index aligns with the 6 colour segments
+  var TIERS = [
+    {min:0,     name:"Ecologically inert",  desc:"No measurable response; event dissipates by evaporation."},
+    {min:100,   name:"Microbial",           desc:"Ephemeral biological soil-crust activation; no vascular plant signal."},
+    {min:500,   name:"Annual germination",  desc:"Germination of therophytes and short-lived ephemerals; transient NDVI bump."},
+    {min:2000,  name:"Perennial response",  desc:"Leaf-flush of established perennials; sustained NDVI anomaly 30–90 days."},
+    {min:5000,  name:"Wadi activation",     desc:"Ephemeral flow in primary wadis; recharge of shallow aquifers; multi-month response."},
+    {min:15000, name:"Regional recharge",   desc:"Exceptional event; significant deep-aquifer recharge; multi-year vegetation memory."}
+  ];
+
+  var $ = function(id){ return document.getElementById(id); };
+  var P = $("P"), A = $("A"), season = $("season"), substrate = $("substrate"),
+      gCustom = $("gCustom"), gCustomWrap = $("gCustomWrap"), alpha = $("alpha"),
+      alphaRead = $("alphaRead"), seriOut = $("seriOut"), tierName = $("tierName"),
+      tierDesc = $("tierDesc"), calcLine = $("calcLine"), check = $("check"),
+      snip = $("snip"), segs = document.querySelectorAll(".scale .seg");
+
+  function tierIndex(v){
+    var i = 0;
+    for (var k=0;k<TIERS.length;k++){ if (v >= TIERS[k].min) i = k; }
+    return i;
+  }
+
+  // g comes from the dropdown, unless "Mixed" is selected -> use the custom field
+  function currentG(){
+    if (substrate.value === "1.10"){          // "Mixed / area-weighted mean" row
+      gCustomWrap.style.display = "block";
+      var v = parseFloat(gCustom.value);
+      return isNaN(v) ? 0 : v;
+    } else {
+      gCustomWrap.style.display = "none";
+      return parseFloat(substrate.value);
+    }
+  }
+
+  function fmt(n){
+    return n.toLocaleString("en-US", {maximumFractionDigits:0});
+  }
+
+  function compute(){
+    var p = parseFloat(P.value);
+    var a = parseFloat(A.value);
+    var f = parseFloat(season.value);
+    var g = currentG();
+    var al = parseFloat(alpha.value);
+    alphaRead.textContent = al.toFixed(2);
+
+    if (isNaN(p) || isNaN(a) || a <= 0 || isNaN(f) || isNaN(g) || isNaN(al)){
+      seriOut.innerHTML = '<span class="dim">—</span>';
+      tierName.textContent = "Awaiting valid inputs";
+      tierDesc.textContent = "Enter P > 0, A > 0, a season and a substrate.";
+      calcLine.innerHTML = "";
+      segs.forEach(function(s){ s.classList.remove("on"); });
+      check.classList.remove("show");
+      snip.textContent = "";
+      return;
+    }
+
+    var seri = p * Math.pow(a, al) * f * g;
+    var rounded = Math.round(seri);
+    var ti = tierIndex(rounded);
+
+    seriOut.textContent = fmt(rounded);
+    tierName.textContent = TIERS[ti].name;
+    tierDesc.textContent = TIERS[ti].desc;
+
+    segs.forEach(function(s,i){ s.classList.toggle("on", i === ti); });
+
+    calcLine.innerHTML = "SERI = <b>" + p + "</b> · <b>" + fmt(a) + "</b><sup>" + al.toFixed(2) +
+      "</sup> · <b>" + f.toFixed(2) + "</b> · <b>" + g.toFixed(2) + "</b> = <b>" + fmt(rounded) + "</b>";
+
+    // dynamic result snippet for citation
+    snip.textContent = "SERI = " + fmt(rounded) + " (" + TIERS[ti].name.toLowerCase() +
+      " tier), computed with SERI (Selkh 2026), doi:10.5281/zenodo.19925434.";
+
+    // self-check: Abadla anchor reproduces ~2353
+    var abadla = (Math.abs(p-10.79)<0.005 && Math.abs(a-1624)<0.5 &&
+                  Math.abs(f-1.30)<0.005 && Math.abs(g-1.10)<0.005 && Math.abs(al-0.68)<0.005);
+    check.classList.toggle("show", abadla && Math.abs(rounded-2353)<=2);
+  }
+
+  // advanced toggle
+  $("advBtn").addEventListener("click", function(){
+    this.classList.toggle("open");
+    $("advPanel").classList.toggle("open");
+  });
+
+  // load Abadla preset
+  $("loadAbadla").addEventListener("click", function(){
+    P.value = "10.79"; A.value = "1624"; season.value = "1.30";
+    substrate.value = "1.10"; gCustom.value = "1.10"; alpha.value = "0.68";
+    compute();
+  });
+
+  // copy buttons
+  document.querySelectorAll(".copy").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var el = document.getElementById(btn.getAttribute("data-target"));
+      var text = el.textContent;
+      var done = function(){
+        var old = btn.textContent; btn.textContent = "Copied ✓"; btn.classList.add("done");
+        setTimeout(function(){ btn.textContent = old; btn.classList.remove("done"); }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done, function(){ fallback(text); done(); });
+      } else { fallback(text); done(); }
+    });
+  });
+  function fallback(text){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position="fixed"; ta.style.opacity="0";
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand("copy"); }catch(e){}
+    document.body.removeChild(ta);
+  }
+
+  // wire up live recompute
+  [P,A,season,substrate,gCustom,alpha].forEach(function(el){
+    el.addEventListener("input", compute);
+    el.addEventListener("change", compute);
+  });
+
+  compute();
+})();
+</script>
+</body>
+</html>

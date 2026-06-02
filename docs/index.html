@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SERI — Spatial Effective Rainfall Index</title>
+<meta name="description" content="SERI is a per-event index of the ecological effectiveness of rainfall in hyper-arid drylands. It scores spatial coherence, not scalar intensity. Open paper, open code, in-browser calculator.">
+<meta property="og:title" content="SERI — Spatial Effective Rainfall Index">
+<meta property="og:description" content="A per-event measure of how ecologically effective a rainfall event is in hyper-arid drylands. Open paper, open code, in-browser calculator.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f4efe4; --paper-2:#efe8d9; --paper-3:#fbf7ee;
+    --ink:#211a10; --ink-soft:#5a4f3d;
+    --line:#d8cdb6; --line-strong:#c4b698;
+    --terra:#b4541f; --terra-deep:#8f3f15; --gold:#c79a3a;
+    --t0:#cdbf9f; --t1:#c79a3a; --t2:#9fb24a; --t3:#4f8f47; --t4:#2f8f86; --t5:#2a5f9e;
+    --shadow:0 1px 0 rgba(255,255,255,.5), 0 22px 48px -28px rgba(40,28,12,.55);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;color:var(--ink);font-family:"Spectral",Georgia,serif;font-size:17px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    background:
+      radial-gradient(120% 80% at 88% -8%, rgba(199,154,58,.12), transparent 55%),
+      radial-gradient(110% 90% at -8% 4%, rgba(180,84,31,.08), transparent 52%),
+      var(--paper);
+  }
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  .wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 20px;}
+  a{color:var(--terra-deep);}
+  section{padding:60px 0;border-top:1px solid var(--line);}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--terra-deep);margin:0 0 14px;}
+  h2.sec{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(26px,5vw,40px);line-height:1.05;letter-spacing:-.015em;margin:0 0 22px;}
+  h2.sec em{font-style:italic;color:var(--terra);font-weight:500;}
+  p.lead{font-size:clamp(17px,2.4vw,20px);color:var(--ink-soft);max-width:64ch;}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:54px 0 64px;border-top:none;}
+  .hero .eyebrow{margin-bottom:18px;}
+  .hero h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(60px,17vw,150px);line-height:.84;letter-spacing:-.03em;margin:0;}
+  .hero .expand{font-family:"Fraunces",serif;font-weight:500;font-style:italic;font-size:clamp(20px,4.6vw,34px);color:var(--terra);margin:14px 0 0;letter-spacing:-.01em;}
+  .hero .pitch{font-size:clamp(18px,2.7vw,23px);max-width:60ch;margin:22px 0 0;color:var(--ink);}
+  .hero .pitch b{color:var(--terra-deep);}
+  .crest{display:inline-flex;align-items:baseline;gap:3px;margin:26px 0 0;padding:13px 20px;background:var(--paper-3);border:1px solid var(--line-strong);border-radius:10px;font-family:"JetBrains Mono",monospace;font-size:clamp(14px,3.4vw,19px);box-shadow:var(--shadow);}
+  .crest b{color:var(--terra-deep);font-weight:700;}
+  .crest sup{font-size:.62em;}
+  .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px;}
+  .btn{font-family:"JetBrains Mono",monospace;font-size:13px;letter-spacing:.04em;text-decoration:none;border-radius:9px;padding:14px 22px;border:1px solid var(--terra);background:var(--terra);color:#fff;transition:background .15s,transform .05s;display:inline-flex;align-items:center;gap:9px;}
+  .btn:hover{background:var(--terra-deep);}
+  .btn:active{transform:translateY(1px);}
+  .btn.ghost{background:transparent;color:var(--terra-deep);}
+  .btn.ghost:hover{background:rgba(180,84,31,.08);}
+  .btn .ar{font-size:16px;}
+
+  /* ---------- timeline ---------- */
+  .timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:30px;border-top:2px solid var(--ink);}
+  .tl{padding:14px 10px 0;border-right:1px solid var(--line);}
+  .tl:last-child{border-right:none;}
+  .tl .yr{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:14px;color:var(--terra-deep);}
+  .tl .nm{font-size:13.5px;color:var(--ink-soft);margin-top:3px;line-height:1.35;}
+  .tl.now .yr{color:var(--terra);}
+  .tl.now .nm{color:var(--ink);font-weight:500;}
+  @media(max-width:640px){.timeline{grid-template-columns:repeat(2,1fr);}.tl{border-bottom:1px solid var(--line);}}
+
+  /* ---------- stat row (anchor case) ---------- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:8px;}
+  @media(max-width:680px){.stats{grid-template-columns:repeat(2,1fr);}}
+  .stat{background:var(--paper-3);border:1px solid var(--line-strong);border-radius:12px;padding:18px;box-shadow:var(--shadow);}
+  .stat .v{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:clamp(26px,5vw,34px);color:var(--ink);line-height:1;}
+  .stat .v small{font-size:.5em;color:var(--ink-soft);font-weight:500;}
+  .stat .k{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--terra-deep);margin-top:9px;}
+  .stat .d{font-size:13px;color:var(--ink-soft);margin-top:5px;line-height:1.4;}
+
+  /* ---------- tier ladder ---------- */
+  .ladder{display:flex;flex-direction:column;gap:5px;margin-top:8px;}
+  .rung{display:grid;grid-template-columns:118px 1fr;align-items:center;gap:14px;}
+  .rung .bar{height:46px;border-radius:8px;display:flex;align-items:center;padding:0 16px;color:#fff;}
+  .rung .bar .nm{font-family:"Fraunces",serif;font-style:italic;font-weight:600;font-size:clamp(15px,2.6vw,19px);text-shadow:0 1px 2px rgba(0,0,0,.28);}
+  .rung .rng{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--ink-soft);text-align:right;}
+  .rung .desc{font-size:13.5px;color:var(--ink-soft);}
+  .b0{background:var(--t0);} .b1{background:var(--t1);} .b2{background:var(--t2);}
+  .b3{background:var(--t3);box-shadow:0 0 0 2px var(--ink) inset, 0 10px 22px -12px rgba(40,28,12,.6);}
+  .b4{background:var(--t4);} .b5{background:var(--t5);}
+  .rung.hl .rng{color:var(--ink);font-weight:700;}
+  @media(max-width:640px){.rung{grid-template-columns:88px 1fr;gap:9px;}.rung .desc{display:none;}}
+  .ladder-note{font-size:13px;color:var(--ink-soft);margin-top:14px;}
+
+  /* ---------- use cards ---------- */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:8px;}
+  @media(max-width:760px){.cards{grid-template-columns:1fr;}}
+  .uc{background:var(--paper-3);border:1px solid var(--line-strong);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);display:flex;flex-direction:column;}
+  .uc .ic{font-size:26px;line-height:1;}
+  .uc h3{font-family:"Fraunces",serif;font-weight:600;font-size:21px;margin:12px 0 6px;}
+  .uc p{font-size:14.5px;color:var(--ink-soft);margin:0 0 16px;flex:1;}
+  .uc .go{font-family:"JetBrains Mono",monospace;font-size:12.5px;letter-spacing:.03em;text-decoration:none;color:#fff;background:var(--terra);padding:11px 14px;border-radius:8px;text-align:center;transition:background .15s;}
+  .uc .go:hover{background:var(--terra-deep);}
+  .uc code{font-family:"JetBrains Mono",monospace;font-size:13px;background:var(--paper-2);border:1px solid var(--line);border-radius:6px;padding:2px 7px;color:var(--ink);}
+  .uc .soon{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;}
+
+  /* ---------- cite hub ---------- */
+  .cite-card{background:var(--paper-3);border:1px solid var(--line-strong);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);}
+  .doi-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:18px;}
+  .doi-pill{flex:1;min-width:240px;border:1px solid var(--line);border-radius:10px;padding:13px 15px;background:#fffdf8;}
+  .doi-pill .t{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--terra-deep);}
+  .doi-pill a{font-family:"JetBrains Mono",monospace;font-size:13.5px;word-break:break-all;text-decoration:none;border-bottom:1px solid var(--line-strong);}
+  .crow-head{display:flex;justify-content:space-between;align-items:center;margin:0 0 8px;gap:10px;}
+  .crow-head h3{font-family:"Fraunces",serif;font-weight:600;font-size:17px;margin:0;}
+  .copy{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line-strong);background:var(--paper-2);color:var(--terra-deep);border-radius:6px;padding:6px 12px;cursor:pointer;white-space:nowrap;transition:background .15s;}
+  .copy:hover{background:#fff;}
+  .copy.done{background:var(--t3);color:#fff;border-color:var(--t3);}
+  .cite-block{background:#fffdf8;border:1px solid var(--line);border-radius:9px;padding:13px 15px;font-family:"JetBrains Mono",monospace;font-size:12px;line-height:1.65;color:var(--ink);white-space:pre-wrap;word-break:break-word;}
+
+  /* ---------- transfer ---------- */
+  .deserts{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 20px;}
+  .deserts span{font-family:"JetBrains Mono",monospace;font-size:12px;background:var(--paper-2);border:1px solid var(--line-strong);border-radius:999px;padding:6px 13px;color:var(--ink-soft);}
+
+  /* ---------- footer ---------- */
+  footer{padding:46px 0 64px;border-top:2px solid var(--ink);}
+  .foot-grid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;}
+  .foot-grid .who{max-width:42ch;}
+  .foot-grid .who .nm{font-family:"Fraunces",serif;font-weight:600;font-size:19px;}
+  .foot-grid .who .af{font-size:14px;color:var(--ink-soft);margin-top:3px;}
+  .foot-links{display:flex;flex-direction:column;gap:7px;font-family:"JetBrains Mono",monospace;font-size:13px;}
+  .ver{font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--line-strong);margin-top:26px;letter-spacing:.05em;}
+  .caveat{background:var(--paper-2);border-left:3px solid var(--gold);padding:13px 16px;border-radius:0 8px 8px 0;font-size:14px;color:var(--ink-soft);margin-top:14px;line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- HERO -->
+  <header class="hero">
+    <p class="eyebrow">A century after De&nbsp;Martonne · open dryland-ecology index</p>
+    <h1>SERI</h1>
+    <p class="expand">the Spatial Effective Rainfall Index</p>
+    <p class="pitch">A per-event measure of <b>how ecologically effective a rainfall event is</b> in hyper-arid drylands. SERI scores not the scalar intensity of a storm but its <b>spatial coherence</b> — the dimension that classical aridity indices leave out.</p>
+    <div class="crest" aria-label="SERI formula">SERI&nbsp;=&nbsp;<b>P</b>&nbsp;·&nbsp;<b>A</b><sup>α</sup>&nbsp;·&nbsp;<b>f</b>(season)&nbsp;·&nbsp;<b>g</b>(substrate)</div>
+    <div class="cta-row">
+      <a class="btn" href="./calculator/">Open the calculator <span class="ar">→</span></a>
+      <a class="btn ghost" href="#use">pip install seri-index</a>
+      <a class="btn ghost" href="#cite">How to cite</a>
+    </div>
+  </header>
+
+  <!-- THE IDEA -->
+  <section id="idea">
+    <p class="eyebrow">The idea</p>
+    <h2 class="sec">Classical indices treat rainfall as a <em>scalar</em>. Drylands don't.</h2>
+    <p class="lead">In a hyper-arid landscape, two events of identical station-measured intensity can produce radically different ecological responses. A 15&nbsp;mm event spread contiguously over ~800&nbsp;km² recharges wadis and triggers mass germination; the same 15&nbsp;mm confined to a 50&nbsp;km² convective cell evaporates within hours and is biologically invisible. SERI makes the <strong>pulse-reserve paradigm</strong> operationally measurable from satellite data at the event scale, by weighting an event by the contiguous area receiving rainfall above a 5&nbsp;mm·day⁻¹ threshold.</p>
+    <div class="timeline">
+      <div class="tl"><div class="yr">1926</div><div class="nm">De Martonne — aridity index</div></div>
+      <div class="tl"><div class="yr">1973</div><div class="nm">Noy-Meir — pulse-reserve</div></div>
+      <div class="tl"><div class="yr">1993</div><div class="nm">SPI — precipitation index</div></div>
+      <div class="tl"><div class="yr">2010</div><div class="nm">SPEI — adds evapotranspiration</div></div>
+      <div class="tl now"><div class="yr">2026</div><div class="nm">SERI — adds spatial coherence</div></div>
+    </div>
+  </section>
+
+  <!-- ANCHOR CASE -->
+  <section id="case">
+    <p class="eyebrow">The anchor case</p>
+    <h2 class="sec">Abadla 2015 — a fully documented event</h2>
+    <p class="lead">A regional winter rainfall system over the lower Saoura basin (Algerian Sahara), late February 2015. Reconstructed from GPM IMERG and cross-validated by field photography, wadi activation, and the multi-year MODIS NDVI record over the same footprint.</p>
+    <div class="stats">
+      <div class="stat"><div class="v">10.79<small> mm</small></div><div class="k">P · intensity</div><div class="d">event mean rainfall</div></div>
+      <div class="stat"><div class="v">1 624<small> km²</small></div><div class="k">A · area</div><div class="d">contiguous footprint &gt; 5 mm·day⁻¹</div></div>
+      <div class="stat"><div class="v">≈ 2 353</div><div class="k">SERI</div><div class="d">perennial-response tier</div></div>
+      <div class="stat"><div class="v">+2.57<small> σ</small></div><div class="k">NDVI anomaly</div><div class="d">statistically singular, 2013–2024</div></div>
+    </div>
+  </section>
+
+  <!-- SIX TIERS -->
+  <section id="tiers">
+    <p class="eyebrow">The output</p>
+    <h2 class="sec">Six ecological tiers</h2>
+    <p class="lead">SERI is a dimensionless composite score; its value is meaningful only relative to a calibrated tier classification — a directly usable management vocabulary.</p>
+    <div class="ladder">
+      <div class="rung"><div class="rng">&lt; 100</div><div class="bar b0"><span class="nm">Ecologically inert</span></div></div>
+      <div class="rung"><div class="rng">100 – 500</div><div class="bar b1"><span class="nm">Microbial</span></div></div>
+      <div class="rung"><div class="rng">500 – 2 000</div><div class="bar b2"><span class="nm">Annual germination</span></div></div>
+      <div class="rung hl"><div class="rng">2 000 – 5 000</div><div class="bar b3"><span class="nm">Perennial response · Abadla 2015</span></div></div>
+      <div class="rung"><div class="rng">5 000 – 15 000</div><div class="bar b4"><span class="nm">Wadi activation</span></div></div>
+      <div class="rung"><div class="rng">&gt; 15 000</div><div class="bar b5"><span class="nm">Regional recharge</span></div></div>
+    </div>
+    <p class="ladder-note">Thresholds calibrated against field observations across the Algerian Sahara transect (2013–2024).</p>
+  </section>
+
+  <!-- USE -->
+  <section id="use">
+    <p class="eyebrow">Use SERI</p>
+    <h2 class="sec">Three ways in — no barrier</h2>
+    <div class="cards">
+      <div class="uc">
+        <div class="ic">🧮</div>
+        <h3>In your browser</h3>
+        <p>Enter P, area, season and substrate — get the SERI value and ecological tier instantly. No account, no install, works on mobile.</p>
+        <a class="go" href="./calculator/">Open the calculator →</a>
+      </div>
+      <div class="uc">
+        <div class="ic">🐍</div>
+        <h3>In Python</h3>
+        <p>The reference implementation, <code>import seri</code> after <code>pip install seri-index</code>. Apache-2.0, ~73 tests, archived with a DOI.</p>
+        <a class="go" href="https://pypi.org/project/seri-index/">View on PyPI →</a>
+      </div>
+      <div class="uc">
+        <div class="ic">🛰️</div>
+        <h3>Source &amp; pipeline</h3>
+        <p>The full Google Earth Engine pipeline and source code are open. <span class="soon">GEE app &amp; Colab — coming</span></p>
+        <a class="go" href="https://github.com/Selkh-arch/seri">Browse the code →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CITE -->
+  <section id="cite">
+    <p class="eyebrow">Cite SERI</p>
+    <h2 class="sec">How to cite</h2>
+    <p class="lead">If SERI helps your work, please cite the concept paper and, if you used the software, the package.</p>
+    <div class="cite-card">
+      <div class="doi-row">
+        <div class="doi-pill"><div class="t">Concept paper</div><a href="https://doi.org/10.5281/zenodo.19925434">doi.org/10.5281/zenodo.19925434</a></div>
+        <div class="doi-pill"><div class="t">Software</div><a href="https://doi.org/10.5281/zenodo.20000268">doi.org/10.5281/zenodo.20000268</a></div>
+      </div>
+      <div class="crow-head"><h3>BibTeX</h3><button class="copy" data-target="bibtex">Copy</button></div>
+      <div class="cite-block" id="bibtex">@misc{Selkh2026SERI,
+  author = {Selkh, Chouaib},
+  title  = {A Century After De Martonne: Introducing the Spatial
+            Effective Rainfall Index (SERI) for Hyper-Arid Environments},
+  year   = {2026},
+  doi    = {10.5281/zenodo.19925434}
+}
+@software{Selkh2026SERIcode,
+  author  = {Selkh, Chouaib},
+  title   = {SERI: Spatial Effective Rainfall Index},
+  version = {1.0.2},
+  year    = {2026},
+  doi     = {10.5281/zenodo.20000268},
+  url     = {https://pypi.org/project/seri-index/}
+}</div>
+    </div>
+  </section>
+
+  <!-- TRANSFER -->
+  <section id="transfer">
+    <p class="eyebrow">Beyond the Sahara</p>
+    <h2 class="sec">Recalibrate SERI for <em>your</em> desert</h2>
+    <p class="lead">The framework transfers worldwide; the numerical coefficients are regional. Transferring to another dryland reduces to substituting a regional event archive and recalibrating α and the seasonal / substrate coefficients against locally observed response. We explicitly invite this — it is the natural route to a multi-region, cross-desert formulation of SERI.</p>
+    <div class="deserts">
+      <span>Western Sahara &amp; Sahel</span><span>Rub' al-Khali</span><span>Namib</span><span>Karoo</span>
+      <span>Atacama</span><span>Mojave</span><span>Sonoran</span><span>Australian arid zone</span>
+      <span>Gobi</span><span>Thar</span>
+    </div>
+    <a class="btn ghost" href="https://github.com/Selkh-arch/seri">Get the open pipeline →</a>
+    <div class="caveat"><strong>Scope.</strong> SERI is a concept paper anchored on a single fully-documented event; α = 0.68 is a working value pending full calibration across ≈150 events (companion paper, in preparation). The index complements — does not replace — long-term drought and land-degradation trend metrics, and is directly relevant to land-degradation-neutrality monitoring (UNCCD; SDG indicator 15.3.1).</div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-grid">
+      <div class="who">
+        <div class="nm">Dr. Chouaib Selkh</div>
+        <div class="af">Université Ahmed Draia d'Adrar · Faculty of Natural &amp; Life Sciences · Adrar, Algeria</div>
+        <div class="af" style="margin-top:8px;">ORCID <a href="https://orcid.org/0000-0002-1538-7135">0000-0002-1538-7135</a></div>
+      </div>
+      <div class="foot-links">
+        <a href="./calculator/">→ SERI calculator</a>
+        <a href="https://pypi.org/project/seri-index/">→ pip install seri-index</a>
+        <a href="https://github.com/Selkh-arch/seri">→ Source on GitHub</a>
+        <a href="https://doi.org/10.5281/zenodo.19925434">→ Concept paper (DOI)</a>
+        <a href="https://doi.org/10.5281/zenodo.20000268">→ Software (DOI)</a>
+      </div>
+    </div>
+    <p class="ver">SERI · Spatial Effective Rainfall Index · © C. Selkh 2026 · content Apache-2.0 / CC-BY</p>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  document.querySelectorAll(".copy").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var el = document.getElementById(btn.getAttribute("data-target"));
+      var text = el.textContent;
+      var done = function(){
+        var old = btn.textContent; btn.textContent = "Copied ✓"; btn.classList.add("done");
+        setTimeout(function(){ btn.textContent = old; btn.classList.remove("done"); }, 1400);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(done, function(){ fb(text); done(); });
+      } else { fb(text); done(); }
+    });
+  });
+  function fb(text){
+    var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";
+    document.body.appendChild(ta);ta.select();try{document.execCommand("copy");}catch(e){}document.body.removeChild(ta);
+  }
+})();
+</script>
+</body>
+</html>
