@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+No change to the scientific formula, default coefficients, tier boundaries,
+or computed results.
+
+### Fixed
+- Web calculator: added the missing "microbial" label to the six-tier scale
+  bar (the 100-500 SERI tier was previously unlabeled).
+
+## [1.0.2] — 2026-05-31
+Released on Zenodo — version DOI 10.5281/zenodo.20478949
+(software concept DOI 10.5281/zenodo.20000268). The package is cited via the
+concept DOI, which always resolves to the latest version.
 ## [1.0.1] — 2026-05-31
 
 Maintenance release: packaging, metadata, and continuous-integration fixes.
