@@ -11,7 +11,7 @@ raise a clear :class:`ImportError` with installation instructions.
 
 The Earth Engine pipeline released alongside the manuscript is the
 authoritative reference; see ``SERI_abadla_2015_v1.js`` and the related
-scripts at DOI 10.5281/zenodo.20478949. The Python wrapper provided here
+scripts at DOI 10.5281/zenodo.20000268. The Python wrapper provided here
 is a convenience for users who prefer to drive the same pipeline from a
 Python environment (e.g. a Jupyter notebook).
 

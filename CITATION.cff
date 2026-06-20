@@ -44,7 +44,7 @@ repository-code: "https://github.com/Selkh-arch/seri"
 url: "https://github.com/Selkh-arch/seri"
 identifiers:
   - type: doi
-    value: "10.5281/zenodo.20478949"
+    value: "10.5281/zenodo.20000268"
     description: "Zenodo concept DOI for the SERI software."
 
 # The preferred-citation block tells citation tools to point users

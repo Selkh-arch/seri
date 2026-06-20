@@ -13,7 +13,7 @@ or any computed result; the 73 unit tests are unchanged and all pass.
 
 ### Fixed
 - Software DOI corrected throughout the package to the SERI code deposit
-  (10.5281/zenodo.20478949); earlier files referenced the SaharaFlora Pro
+  (10.5281/zenodo.20000268); earlier files referenced the SaharaFlora Pro
   deposit (…19535545) by mistake.
 - Repository URLs corrected to https://github.com/Selkh-arch/seri.
 - Removed unused imports and placeholder f-strings flagged by ruff; the

@@ -2,7 +2,7 @@
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python ≥ 3.9](https://img.shields.io/badge/python-≥3.9-blue.svg)](https://www.python.org/)
-[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.20478949-blue)](https://doi.org/10.5281/zenodo.20478949)
+[![DOI](https://img.shields.io/badge/DOI-10.5281%2Fzenodo.20000268-blue)](https://doi.org/10.5281/zenodo.20000268)
 
 Reference Python implementation of the **Spatial Effective Rainfall Index (SERI)** —
 an event-scale ecological-effectiveness metric for hyper-arid environments
@@ -19,7 +19,7 @@ the concept paper:
 ```
 Selkh, C. (2026). SERI — Spatial Effective Rainfall Index
 [Computer software]. Zenodo.
-https://doi.org/10.5281/zenodo.20478949
+https://doi.org/10.5281/zenodo.20000268
 ```
 
 **Concept paper**

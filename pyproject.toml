@@ -74,7 +74,7 @@ Homepage      = "https://github.com/Selkh-arch/seri"
 Repository    = "https://github.com/Selkh-arch/seri"
 Documentation = "https://github.com/Selkh-arch/seri#readme"
 Issues        = "https://github.com/Selkh-arch/seri/issues"
-"Concept DOI" = "https://doi.org/10.5281/zenodo.20478949"
+"Concept DOI" = "https://doi.org/10.5281/zenodo.20000268"
 
 # Console-script entry points. After `pip install seri`, the commands
 # `seri` and `seri-gui` are available on PATH (on Windows they become
