@@ -24,7 +24,7 @@ If you use SERI in your research, please cite both the software and
 the concept paper:
 
     Selkh, C. (2026). SERI - Spatial Effective Rainfall Index
-    [Computer software]. Zenodo. doi:10.5281/zenodo.20000268
+    [Computer software]. Zenodo. doi:10.5281/zenodo.20478949
 
     Selkh, C. (2026). A Century After De Martonne: Why Spatial Coherence
     is the Missing Dimension of Aridity in the Hyper-Arid Sahara.

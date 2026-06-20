@@ -264,7 +264,7 @@ def main() -> int:
     status = ttk.Label(
         root,
         text=("Cite: Selkh, C. (2026). SERI - Spatial Effective Rainfall Index. "
-              "Zenodo. doi:10.5281/zenodo.20000268"),
+              "Zenodo. doi:10.5281/zenodo.20478949"),
         foreground="#666", padding=(12, 4),
     )
     status.pack(fill="x", side="bottom")

@@ -125,7 +125,7 @@ def _cmd_info(args: argparse.Namespace) -> int:
     print()
     print("Cite this software:")
     print("  Selkh, C. (2026). SERI - Spatial Effective Rainfall Index")
-    print("  [Computer software]. Zenodo. doi:10.5281/zenodo.20000268")
+    print("  [Computer software]. Zenodo. doi:10.5281/zenodo.20478949")
     print()
     print("Cite the concept paper:")
     print("  Selkh, C. (2026). A Century After De Martonne: Why Spatial")
